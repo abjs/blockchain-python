@@ -65,12 +65,14 @@ def get_blockchain_size(blockchain):
     return len(blockchain)
 
 
-def genarate_blockchain(blockchain):
+def genarate_blockchain():
+    blockchain = []
     timestamp = str(datetime(2022, 1, 1, 12, 0, 0))
     block = {
         'index': 0,
-        'previous_hash': "0",
-        "user_hash": "0",
+        'previous_hash': None,
+        "user_hash": None,
+        "vote": None,
         'timestamp': timestamp,
     }
     block['hash'] = hash_data(block)
@@ -95,6 +97,28 @@ def check_user_vote(blockchain, user_hash):
         if block['user_hash'] == user_hash:
             return block['vote']
     return None
+
+
+def get_number_of_votes(blockchain):
+    votes = {}
+    for block in blockchain:
+        if block['vote'] != None:
+            if block['vote'] not in votes:
+                votes[block['vote']] = 1
+            else:
+                votes[block['vote']] += 1
+    return votes
+
+
+def get_user_vote(blockchain, user_hash):
+    for block in blockchain:
+        if block['user_hash'] == user_hash:
+            return block['vote']
+    return None
+
+
+def get_total_vote_count(blockchain):
+    return blockchain[-1]['index']
 
 
 def add_new_block(blockchain, data):
